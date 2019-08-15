@@ -1,0 +1,13 @@
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\bin\Debug\netcoreapp2.1\TestWebAPI.deps.json
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\bin\Debug\netcoreapp2.1\TestWebAPI.runtimeconfig.json
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\bin\Debug\netcoreapp2.1\TestWebAPI.runtimeconfig.dev.json
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\bin\Debug\netcoreapp2.1\TestWebAPI.dll
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.csproj.CoreCompileInputs.cache
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.RazorAssemblyInfo.cache
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.RazorAssemblyInfo.cs
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.AssemblyInfoInputs.cache
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.AssemblyInfo.cs
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.RazorTargetAssemblyInfo.cache
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\bin\Debug\netcoreapp2.1\TestWebAPI.pdb
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.dll
+C:\Users\hoquem\source\repos\Test\TestWebAPI\TestWebAPI\obj\Debug\netcoreapp2.1\TestWebAPI.pdb
