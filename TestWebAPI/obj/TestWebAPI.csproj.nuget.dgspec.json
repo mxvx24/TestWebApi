@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hoquem\\source\\repos\\Test\\TestWebAPI\\TestWebAPI\\TestWebAPI.csproj": {}
+    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hoquem\\source\\repos\\Test\\TestWebAPI\\TestWebAPI\\TestWebAPI.csproj": {
+    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hoquem\\source\\repos\\Test\\TestWebAPI\\TestWebAPI\\TestWebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj",
         "projectName": "TestWebAPI",
-        "projectPath": "C:\\Users\\hoquem\\source\\repos\\Test\\TestWebAPI\\TestWebAPI\\TestWebAPI.csproj",
-        "packagesPath": "C:\\Users\\hoquem\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hoquem\\source\\repos\\Test\\TestWebAPI\\TestWebAPI\\obj\\",
+        "projectPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj",
+        "packagesPath": "C:\\Users\\tunii\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\hoquem\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tunii\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -56,11 +56,16 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[2.2.3, )"
+              "version": "[3.0.0-preview8-19413-06, )"
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true

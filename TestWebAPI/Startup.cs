@@ -66,6 +66,12 @@
         /// </param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            /*using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
+                context.Database.Migrate();
+            } */
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -110,21 +116,14 @@
                         });
 
                 optionsBuilder.EnableSensitiveDataLogging();
-                optionsBuilder.UseLoggerFactory(this.Logger);
+                optionsBuilder.UseLoggerFactory(this.LoggerFactory);
             });*/
 
             /*
             https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.0#dbcontext-pooling 
             Pooling has some performance gains. Avoid using DbContext Pooling if you maintain your own state 
-            (for example, private fields) in your derived DbContext class that should not be shared across requests. */
-            // services.AddDbContextPool<EmployeeDataContext>(options => { });
-
-            /* services.AddScoped<EmployeeDataContext>(
-                provider =>
-                    {
-                        var currentUser = sp.GetService<IHttpContextAccessor>()?.HttpContext?.User?.Identity?.Name;
-                        return new AppDbContextParams { GetCurrentUsernameCallback = () => currentUser ?? "n/a" };
-                    }); */
+            (for example, private fields) in your derived DbContext class that should not be shared across requests.
+            services.AddDbContextPool<EmployeeDataContext>(options => { });  */
 
             services.AddScoped<EmployeeDataContext>(
                 sp =>

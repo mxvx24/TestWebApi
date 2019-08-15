@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
 
+    using TestWebAPI.Library;
+
     /// <summary>
     /// The program.
     /// </summary>
@@ -16,7 +18,7 @@
         /// </param>
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().MigrateDatabase().Run();
         }
 
         /// <summary>
