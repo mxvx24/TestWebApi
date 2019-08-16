@@ -68,7 +68,8 @@
         /// </param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            /*using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            /* To create database from startup
+             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
                 context.Database.Migrate();
