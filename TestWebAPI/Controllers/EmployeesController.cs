@@ -14,6 +14,7 @@
     using TestWebAPI.ClassLibrary;
     using TestWebAPI.Data;
     using TestWebAPI.Entities;
+    using TestWebAPI.Library;
 
     /// <summary>
     /// The employees controller.
@@ -69,11 +70,6 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee([FromRoute] int id)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
             var employee = await this.context.Employees.FindAsync(id);
 
             if (employee == null)
@@ -157,9 +153,11 @@
             {
                 return this.BadRequest();
             }
-
-            this.context.Entry(employee.ToEntity()).State = EntityState.Modified;
-
+            
+            // this.context.Entry(employee.ToEntity()).State = EntityState.Modified;
+            var existingEmployee = await this.context.Employees.FindAsync(id);
+            Util.CopyValues(employee.ToEntity(), existingEmployee, true);
+            
             try
             {
                 await this.context.SaveChangesAsync();

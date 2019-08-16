@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Security.Policy;
 
+    using AutoMapper;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -29,7 +31,7 @@
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        /// <param name="loggerFactory"></param>
+        /// <param name="loggerFactory">The logger factory</param>
         /// <param name="hostingEnvironment">
         /// The hosting Environment.
         /// </param>
@@ -94,6 +96,7 @@
         /// </param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddLogging(
@@ -125,6 +128,8 @@
             (for example, private fields) in your derived DbContext class that should not be shared across requests.
             services.AddDbContextPool<EmployeeDataContext>(options => { });  */
 
+            var logger = this.LoggerFactory.CreateLogger("Delegate");
+
             services.AddScoped<EmployeeDataContext>(
                 sp =>
                     {
@@ -141,15 +146,10 @@
 
                         var context = new EmployeeDataContext(optionsBuilder.Options);
 
-                        context.OnSaveEventHandlers = (entries) =>
-                            {
-                                var logger = this.LoggerFactory.CreateLogger("Delegate 1");
-                                logger.LogInformation($"Delegate 1 Invoked.");
-                            }; 
+                        context.OnSaveEventHandlers = EntityEventHandler.OnSave;
                             
                         context.OnSaveEventHandlers += (entries) =>
                             {
-                                var logger = this.LoggerFactory.CreateLogger("Delegate 2");
                                 logger.LogInformation($"Delegate 2 Invoked.");
                             }; 
 
