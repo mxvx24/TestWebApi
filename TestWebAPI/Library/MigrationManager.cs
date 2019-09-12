@@ -1,6 +1,7 @@
 ﻿namespace TestWebAPI.Library
 {
     using System;
+    using System.Linq;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,13 @@
         {
             using (var scope = webHost.Services.CreateScope())
             {
-                using (var appContext = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
+                using (var context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
                 {
                     try
                     {
-                        appContext.Database.Migrate();
+                        // appContext.Database.EnsureDeleted();
+                        context.Database.Migrate();
+                        /* context.Employees.AddRange(DataGenerator.GetEmployee(5));*/
                     }
                     catch (Exception ex)
                     {

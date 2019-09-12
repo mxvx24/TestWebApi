@@ -1,22 +1,17 @@
 ﻿namespace TestWebAPI
 {
-    using System;
-    using System.Linq;
-    using System.Security.Policy;
-
     using AutoMapper;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Console;
 
     using TestWebAPI.Data;
+    using TestWebAPI.Data.Repositories;
     using TestWebAPI.Entities;
     using TestWebAPI.EventHandlers;
 
@@ -85,6 +80,7 @@
                 app.UseHsts();
             }
 
+            app.UseHealthChecks("/healthcheck");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
@@ -156,6 +152,9 @@
 
                         return context;
                     });
+
+            services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
+            services.AddHealthChecks();
         }
     }
 }

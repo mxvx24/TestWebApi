@@ -13,6 +13,7 @@
 
     using TestWebAPI.ClassLibrary;
     using TestWebAPI.Data;
+    using TestWebAPI.Data.Repositories;
     using TestWebAPI.Entities;
     using TestWebAPI.Library;
 
@@ -29,14 +30,19 @@
         private readonly EmployeeDataContext context;
 
         /// <summary>
+        /// The employee repository.
+        /// </summary>
+        private readonly IRepository<Employee> employeeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmployeesController"/> class.
         /// </summary>
-        /// <param name="context">
-        /// The context.
+        /// <param name="repository">
+        /// The repository.
         /// </param>
-        public EmployeesController(EmployeeDataContext context)
+        public EmployeesController(IRepository<Employee> repository)
         {
-            this.context = context;
+            this.employeeRepository = repository;
         }
 
         /// <summary>
@@ -45,10 +51,10 @@
         /// this mechanism can be used to obtain a small perf gain by bypassing the computation of the hash and the cache lookup, allowing
         /// the application to use an already compiled query through the invocation of a delegate.
         /// </summary>
-        private static Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> SearchEmployeesByName { get; } =
+        private static Func<EmployeeDataContext, string, Task<List<Employee>>> SearchEmployeesByName { get; } =
             EF.CompileAsyncQuery(
-                (EmployeeDataContext context, string nameLike) => 
-                    context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));
+                (EmployeeDataContext context, string nameLike) =>
+                    context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)).ToList());
 
         /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
 
@@ -70,7 +76,7 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee([FromRoute] int id)
         {
-            var employee = await this.context.Employees.FindAsync(id);
+            var employee = await this.employeeRepository.GetAsync(id);
 
             if (employee == null)
             {
@@ -93,8 +99,8 @@
         public async Task<IActionResult> GetEmployees([FromQuery] string nameLike = default)
         {
             var employees = string.IsNullOrWhiteSpace(nameLike) ? 
-                                 await this.context.Employees.ToListAsync() : 
-                                 await SearchEmployeesByName(this.context, nameLike).ToListAsync();
+                                 await this.employeeRepository.GetAllAsync() : 
+                                 await SearchEmployeesByName(this.context, nameLike);
             
             if (!employees.Any())
             {

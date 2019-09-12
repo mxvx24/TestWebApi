@@ -2,10 +2,12 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using TestWebAPI.Entities;
+
     /// <summary>
     /// The value.
     /// </summary>
-    public class Employee
+    public class Employee : BaseEntity
     {
         /// <summary>
         /// Gets or sets the id.

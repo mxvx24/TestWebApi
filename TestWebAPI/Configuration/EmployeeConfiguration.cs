@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     using TestWebAPI.Entities;
+    using TestWebAPI.Library;
 
     /// <summary>
     /// The employee configuration.
@@ -18,24 +19,9 @@
         /// </param>
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            // HasData method to seed initial records
-            builder.HasData(
-                new Employee
-                    {
-                        Id = 1,
-                        FirstName = "Mohammed",
-                        LastName = "Hoque",
-                        Email = "mohammed.hoque@email.com",
-                        Title = "Big Title"
-                    },
-                new Employee
-                    {
-                        Id = 2,
-                        FirstName = "Test",
-                        LastName = "User",
-                        Email = "test.user@email.com",
-                        Title = "Cool Title"
-                    });
+            // HasData method to seed initial records - not working
+            /*var employees = DataGenerator.GetEmployee(20000);
+            builder.HasData(employees);*/
         }
     }
 }

@@ -9,6 +9,7 @@
 
     using TestWebAPI.Configuration;
     using TestWebAPI.Entities;
+    using TestWebAPI.Library;
 
     /// <summary>
     ///     The employee data context.
@@ -67,8 +68,7 @@
         /// </param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-
+            // base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer(
                 "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true",
                 option =>
@@ -87,8 +87,10 @@
         /// </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+             base.OnModelCreating(modelBuilder);
+
+            // modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.Entity<Employee>().HasData(DataGenerator.GetEmployee(5000));
         }
     }
 }

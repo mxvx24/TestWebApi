@@ -8,12 +8,6 @@
     public class Employee : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [Required]
-        public int Id { get; set; }
-        
-        /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         [Required]
