@@ -20,8 +20,7 @@
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
             // HasData method to seed initial records - not working
-            /*var employees = DataGenerator.GetEmployee(20000);
-            builder.HasData(employees);*/
+            builder.HasData(DataGenerator.GetEmployee(20000));
         }
     }
 }

@@ -87,10 +87,10 @@
         /// </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
-            // modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.Entity<Employee>().HasData(DataGenerator.GetEmployee(5000));
+            // modelBuilder.Entity<Employee>().HasData(DataGenerator.GetEmployee(5000));
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
         }
     }
 }

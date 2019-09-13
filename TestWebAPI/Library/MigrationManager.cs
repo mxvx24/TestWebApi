@@ -31,13 +31,12 @@
                 {
                     try
                     {
-                        // appContext.Database.EnsureDeleted();
+                        // context.Database.EnsureDeleted();
                         context.Database.Migrate();
-                        /* context.Employees.AddRange(DataGenerator.GetEmployee(5));*/
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
+                        Console.WriteLine(ex);
                         throw;
                     }
                 }

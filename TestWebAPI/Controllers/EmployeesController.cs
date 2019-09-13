@@ -35,27 +35,38 @@
         private readonly IRepository<Employee> employeeRepository;
 
         /// <summary>
+        /// Gets the employee name search.
+        /// MSDN: Although in general EF Core can automatically compile and cache queries based on a hashed representation of the query expressions,
+        /// this mechanism can be used to obtain a small performance gain by bypassing the computation of the hash and the cache lookup, allowing
+        /// the application to use an already compiled query through the invocation of a delegate.
+        /// </summary>
+        private Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
+            EF.CompileAsyncQuery((EmployeeDataContext context, string nameLike) =>
+                context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmployeesController"/> class.
         /// </summary>
         /// <param name="repository">
         /// The repository.
         /// </param>
-        public EmployeesController(IRepository<Employee> repository)
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        public EmployeesController(IRepository<Employee> repository, EmployeeDataContext context)
         {
             this.employeeRepository = repository;
+            this.context = context;
+
+            /*foreach (var employee in DataGenerator.GetEmployee(5000))
+            {
+                this.employeeRepository.Add(employee);
+            }
+
+            var employeeCount = this.employeeRepository.SaveChangesAsync();
+            Console.WriteLine($"Employee Add Count: {employeeCount}"); */
         }
-
-        /// <summary>
-        /// Gets the employee name search.
-        /// MSDN: Although in general EF Core can automatically compile and cache queries based on a hashed representation of the query expressions,
-        /// this mechanism can be used to obtain a small perf gain by bypassing the computation of the hash and the cache lookup, allowing
-        /// the application to use an already compiled query through the invocation of a delegate.
-        /// </summary>
-        private static Func<EmployeeDataContext, string, Task<List<Employee>>> SearchEmployeesByName { get; } =
-            EF.CompileAsyncQuery(
-                (EmployeeDataContext context, string nameLike) =>
-                    context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)).ToList());
-
+        
         /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
 
         /*[HttpGet("/test")]
@@ -100,7 +111,7 @@
         {
             var employees = string.IsNullOrWhiteSpace(nameLike) ? 
                                  await this.employeeRepository.GetAllAsync() : 
-                                 await SearchEmployeesByName(this.context, nameLike);
+                                 await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
             
             if (!employees.Any())
             {

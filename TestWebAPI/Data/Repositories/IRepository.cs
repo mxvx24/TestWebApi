@@ -115,5 +115,13 @@
         /// The entity.
         /// </param>
         void Delete(T entity);
+
+        /// <summary>
+        /// The save changes async.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        Task<int> SaveChangesAsync();
     }
 }

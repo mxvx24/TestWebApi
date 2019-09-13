@@ -112,12 +112,18 @@
         }
 
         /// <inheritdoc />
+        public virtual async Task<int> SaveChangesAsync()
+        {
+            return await this.Context.SaveChangesAsync();
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
-
+        
         /// <summary>
         /// Protected implementation of Dispose pattern
         /// </summary>
