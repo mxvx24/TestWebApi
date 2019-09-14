@@ -40,9 +40,11 @@
         /// this mechanism can be used to obtain a small performance gain by bypassing the computation of the hash and the cache lookup, allowing
         /// the application to use an already compiled query through the invocation of a delegate.
         /// </summary>
-        private Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
+        private readonly Func<EmployeeDataContext, string, AsyncEnumerable<Employee>> searchEmployeesByName =
             EF.CompileAsyncQuery((EmployeeDataContext context, string nameLike) =>
                 context.Employees.Where(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)));
+
+        /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeesController"/> class.
@@ -57,18 +59,8 @@
         {
             this.employeeRepository = repository;
             this.context = context;
-
-            /*foreach (var employee in DataGenerator.GetEmployee(5000))
-            {
-                this.employeeRepository.Add(employee);
-            }
-
-            var employeeCount = this.employeeRepository.SaveChangesAsync();
-            Console.WriteLine($"Employee Add Count: {employeeCount}"); */
         }
         
-        /*EF.Functions.Like(e.FirstName, nameLike) || EF.Functions.Like(e.LastName, nameLike)*/
-
         /*[HttpGet("/test")]
         public IActionResult<Employee> Test()
         {
@@ -109,10 +101,12 @@
         [HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] string nameLike = default)
         {
-            var employees = string.IsNullOrWhiteSpace(nameLike) ? 
-                                 await this.employeeRepository.GetAllAsync() : 
-                                 await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
-            
+            var employees = string.IsNullOrWhiteSpace(nameLike)
+                                ? await this.employeeRepository.GetAllAsync()
+                                : await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
+                                /* await this.employeeRepository.FindAsync(
+                                    e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)); */
+
             if (!employees.Any())
             {
                 return this.NotFound(employees);
@@ -138,8 +132,11 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            this.context.Employees.Add(employee.ToEntity());
-            await this.context.SaveChangesAsync();
+            /* this.context.Employees.Add(employee.ToEntity());
+            await this.context.SaveChangesAsync(); */
+
+            await this.employeeRepository.Add(employee.ToEntity());
+            await this.employeeRepository.SaveChangesAsync();
 
             return this.CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
         }
@@ -247,6 +244,7 @@
             }
 
             var employee = await this.context.Employees.FindAsync(id);
+
             if (employee == null)
             {
                 return this.NotFound();
@@ -259,7 +257,7 @@
         }
         
         /// <summary>
-        /// The get db date time.
+        /// The get database date time.
         /// </summary>
         /// <returns>
         /// The <see cref="Task"/>.

@@ -1,19 +1,31 @@
 ﻿namespace TestWebAPI
 {
+    using System.Linq;
+    using System.Net.Mime;
+    using System.Threading.Tasks;
+
     using AutoMapper;
 
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Logging;
+
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using TestWebAPI.Data;
     using TestWebAPI.Data.Repositories;
     using TestWebAPI.Entities;
     using TestWebAPI.EventHandlers;
+    using TestWebAPI.Library;
+    using TestWebAPI.Library.HealthChecks;
 
     /// <summary>
     /// The startup.
@@ -80,7 +92,12 @@
                 app.UseHsts();
             }
 
-            app.UseHealthChecks("/healthcheck");
+            app.UseHealthChecks(
+                "/healthcheck",
+                new HealthCheckOptions()
+                    {
+                        ResponseWriter = WriteResponse
+            });
             app.UseHttpsRedirection();
             app.UseMvc();
         }
@@ -154,7 +171,41 @@
                     });
 
             services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
-            services.AddHealthChecks();
+            services.AddHealthChecks().AddMemoryHealthCheck("memory");
+        }
+
+        /// <summary>
+        /// The write response.
+        /// </summary>
+        /// <param name="httpContext">
+        /// The http context.
+        /// </param>
+        /// <param name="result">
+        /// The result.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private static Task WriteResponse(HttpContext httpContext, HealthReport result)
+        {
+            httpContext.Response.ContentType = MediaTypeNames.Application.Json;
+
+            var json = new JObject(
+                new JProperty("status", result.Status.ToString()),
+                new JProperty(
+                    "results",
+                    new JObject(
+                        result.Entries.Select(
+                            pair => new JProperty(
+                                pair.Key,
+                                new JObject(
+                                    new JProperty("status", pair.Value.Status.ToString()),
+                                    new JProperty("description", pair.Value.Description),
+                                    new JProperty(
+                                        "data",
+                                        new JObject(pair.Value.Data.Select(p => new JProperty(p.Key, p.Value))))))))));
+
+            return httpContext.Response.WriteAsync(json.ToString(Formatting.Indented));
         }
     }
 }
