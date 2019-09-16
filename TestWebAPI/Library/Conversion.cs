@@ -37,7 +37,7 @@
         /// <returns>
         /// The <see cref="Employee"/>.
         /// </returns>
-        public static Entities.Employee ToEntity(this DTOs.Employee employee)
+        public static Entities.Employee ToEntity(this Employee employee)
         {
             return new Entities.Employee
             {

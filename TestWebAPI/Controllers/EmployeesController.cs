@@ -83,7 +83,7 @@
 
             if (employee == null)
             {
-                return this.NotFound();
+                return this.NotFound($"Invalid employee id: {id}");
             }
 
             return this.Ok(employee);
