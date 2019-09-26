@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj": {}
+    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj": {
+    "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj",
-        "projectName": "TestWebAPI",
-        "projectPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\TestWebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj",
+        "projectName": "TestWebApi.Shared",
+        "projectPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj",
         "packagesPath": "C:\\Users\\tunii\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebAPI\\obj\\",
+        "outputPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -23,7 +23,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp2.2"
+          "netcoreapp3.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -31,7 +31,7 @@
           "https://freemanco.pkgs.visualstudio.com/_packaging/FreemanEnterprise/nuget/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp2.2": {
+          "netcoreapp3.0": {
             "projectReferences": {}
           }
         },
@@ -42,29 +42,7 @@
         }
       },
       "frameworks": {
-        "netcoreapp2.2": {
-          "dependencies": {
-            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
-              "target": "Package",
-              "version": "[7.0.0, )"
-            },
-            "Microsoft.AspNetCore.App": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )",
-              "autoReferenced": true
-            },
-            "Microsoft.NETCore.App": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )",
-              "autoReferenced": true
-            },
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-              "target": "Package",
-              "version": "[3.0.0-preview9-19453-02, )"
-            }
-          },
+        "netcoreapp3.0": {
           "imports": [
             "net461",
             "net462",
@@ -75,6 +53,11 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
