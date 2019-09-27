@@ -1,0 +1,7 @@
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\bin\Debug\netcoreapp3.0\TestWebApi.Domain.deps.json
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\bin\Debug\netcoreapp3.0\TestWebApi.Domain.dll
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\bin\Debug\netcoreapp3.0\TestWebApi.Domain.pdb
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp3.0\TestWebApi.Domain.AssemblyInfoInputs.cache
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp3.0\TestWebApi.Domain.AssemblyInfo.cs
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp3.0\TestWebApi.Domain.dll
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp3.0\TestWebApi.Domain.pdb

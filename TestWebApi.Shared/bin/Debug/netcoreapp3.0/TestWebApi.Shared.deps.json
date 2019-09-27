@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "TestWebApi.Shared/1.0.0": {
+        "runtime": {
+          "TestWebApi.Shared.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TestWebApi.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

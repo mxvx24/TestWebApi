@@ -11,12 +11,12 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
 
-    using TestWebAPI.ClassLibrary;
-    using TestWebAPI.Data;
-    using TestWebAPI.Data.Repositories;
-    using TestWebAPI.Entities;
-    using TestWebAPI.Library;
+    using TestWebApi.Data;
+    using TestWebApi.Data.Repositories;
+    using TestWebApi.Domain.Entities;
 
+    using TestWebAPI.Library;
+    
     /// <summary>
     /// The employees controller.
     /// </summary>

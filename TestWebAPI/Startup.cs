@@ -20,9 +20,12 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using TestWebAPI.Data;
-    using TestWebAPI.Data.Repositories;
-    using TestWebAPI.Entities;
+    using TestWebApi.Data;
+
+    using TestWebApi.Data.Repositories;
+
+    using TestWebApi.Domain.Entities;
+
     using TestWebAPI.EventHandlers;
     using TestWebAPI.Library;
     using TestWebAPI.Library.HealthChecks;

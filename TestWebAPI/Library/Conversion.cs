@@ -16,7 +16,7 @@
         /// <returns>
         /// The <see cref="Employee"/>.
         /// </returns>
-        public static Employee ToDto(this Entities.Employee employee)
+        public static Employee ToDto(this TestWebApi.Domain.Entities.Employee employee)
         {
             return new DTOs.Employee()
             {
@@ -37,9 +37,9 @@
         /// <returns>
         /// The <see cref="Employee"/>.
         /// </returns>
-        public static Entities.Employee ToEntity(this Employee employee)
+        public static TestWebApi.Domain.Entities.Employee ToEntity(this Employee employee)
         {
-            return new Entities.Employee
+            return new TestWebApi.Domain.Entities.Employee
             {
                 Id = employee.Id,
                 FirstName = employee.FirstName,

@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
 
+    using TestWebApi.Data;
+
     using TestWebAPI.Library;
 
     /// <summary>

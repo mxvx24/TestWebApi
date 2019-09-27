@@ -7,9 +7,7 @@
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-    using TestWebAPI.Entities;
-
+    
     /// <summary>
     /// The employee event handler.
     /// </summary>

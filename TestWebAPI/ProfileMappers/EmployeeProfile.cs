@@ -12,8 +12,8 @@
         /// </summary>
         public EmployeeProfile()
         {
-            this.CreateMap<DTOs.Employee, Entities.Employee>();
-            this.CreateMap<Entities.Employee, DTOs.Employee>();
+            this.CreateMap<DTOs.Employee, TestWebApi.Domain.Entities.Employee>();
+            this.CreateMap<TestWebApi.Domain.Entities.Employee, DTOs.Employee>();
         }
     }
 }

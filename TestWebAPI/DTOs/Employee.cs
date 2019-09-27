@@ -2,18 +2,13 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using TestWebAPI.Entities;
-
+    using TestWebApi.Domain.Entities;
+    
     /// <summary>
     /// The value.
     /// </summary>
     public class Employee : BaseEntity
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>

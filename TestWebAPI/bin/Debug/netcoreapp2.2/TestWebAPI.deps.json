@@ -10,7 +10,7 @@
       "NETCOREAPP",
       "NETCOREAPP2_2"
     ],
-    "languageVersion": "",
+    "languageVersion": "7.3",
     "platform": "",
     "allowUnsafe": false,
     "warningsAsErrors": false,
@@ -27,7 +27,9 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "7.0.0",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.0.0-preview9-19453-02"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.0.0-preview9-19453-02",
+          "TestWebApi.Data": "1.0.0",
+          "TestWebApi.Domain": "1.0.0"
         },
         "runtime": {
           "TestWebAPI.dll": {}
@@ -75,6 +77,26 @@
         },
         "compile": {
           "lib/netstandard2.0/dotnet-aspnet-codegenerator-design.dll": {}
+        }
+      },
+      "TestWebApi.Data/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "2.2.0",
+          "TestWebApi.Domain": "1.0.0"
+        },
+        "runtime": {
+          "TestWebApi.Data.dll": {}
+        },
+        "compile": {
+          "TestWebApi.Data.dll": {}
+        }
+      },
+      "TestWebApi.Domain/1.0.0": {
+        "runtime": {
+          "TestWebApi.Domain.dll": {}
+        },
+        "compile": {
+          "TestWebApi.Domain.dll": {}
         }
       },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -3299,6 +3321,16 @@
       "sha512": "sha512-ZF4aOgQQlNLS4oqVatb0Gv4rsFyGeIr/pg9KSggLok0eMEfj8l2JEBNHOpATd5h1aXIVXHGGAQQuDtIZcZfaeQ==",
       "path": "microsoft.visualstudio.web.codegeneration.design/3.0.0-preview9-19453-02",
       "hashPath": "microsoft.visualstudio.web.codegeneration.design.3.0.0-preview9-19453-02.nupkg.sha512"
+    },
+    "TestWebApi.Data/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TestWebApi.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
       "type": "package",

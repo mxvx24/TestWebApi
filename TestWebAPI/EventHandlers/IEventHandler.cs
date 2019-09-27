@@ -8,7 +8,7 @@
 
     using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-    using TestWebAPI.Entities;
+    using TestWebApi.Domain.Entities;
 
     /// <summary>
     /// The base event handler.

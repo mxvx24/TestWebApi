@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Specifications\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -14,6 +13,11 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0-preview9-19453-02" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestWebApi.Data\TestWebApi.Data.csproj" />
+    <ProjectReference Include="..\TestWebApi.Domain\TestWebApi.Domain.csproj" />
   </ItemGroup>
 
 </Project>
