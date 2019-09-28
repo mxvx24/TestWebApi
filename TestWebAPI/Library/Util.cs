@@ -6,7 +6,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The utility class. Test.
+    /// The utility class. Test: Update local.
     /// </summary>
     public static class Util
     {
