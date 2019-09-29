@@ -87,7 +87,9 @@
                                       StreetName = $"Road_{i}",
                                       StreetNo = $"{i}",
                                       City = $"City_{i}",
-                                      State = GetRandomState()
+                                      State = GetRandomState(),
+                                      CreatedBy = "System",
+                                      CreatedOn = DateTime.UtcNow
                 });
             }
 
