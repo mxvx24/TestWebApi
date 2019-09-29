@@ -7,3 +7,4 @@ C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebAPI.LoadTest\obj\Debug\
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebAPI.LoadTest\obj\Debug\netcoreapp2.2\TestWebAPI.LoadTest.AssemblyInfo.cs
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebAPI.LoadTest\obj\Debug\netcoreapp2.2\TestWebAPI.LoadTest.dll
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebAPI.LoadTest\obj\Debug\netcoreapp2.2\TestWebAPI.LoadTest.pdb
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebAPI.LoadTest\obj\Debug\netcoreapp2.2\TestWebAPI.LoadTest.csprojAssemblyReference.cache

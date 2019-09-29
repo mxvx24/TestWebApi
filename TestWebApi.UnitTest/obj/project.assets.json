@@ -1962,6 +1962,26 @@
         "build": {
           "build/netcoreapp1.0/xunit.runner.visualstudio.props": {}
         }
+      },
+      "TestWebApi.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "compile": {
+          "bin/placeholder/TestWebApi.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestWebApi.Domain.dll": {}
+        }
+      },
+      "TestWebApi.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "compile": {
+          "bin/placeholder/TestWebApi.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestWebApi.Shared.dll": {}
+        }
       }
     }
   },
@@ -6504,11 +6524,23 @@
         "xunit.runner.visualstudio.2.4.0.nupkg.sha512",
         "xunit.runner.visualstudio.nuspec"
       ]
+    },
+    "TestWebApi.Domain/1.0.0": {
+      "type": "project",
+      "path": "../TestWebApi.Domain/TestWebApi.Domain.csproj",
+      "msbuildProject": "../TestWebApi.Domain/TestWebApi.Domain.csproj"
+    },
+    "TestWebApi.Shared/1.0.0": {
+      "type": "project",
+      "path": "../TestWebApi.Shared/TestWebApi.Shared.csproj",
+      "msbuildProject": "../TestWebApi.Shared/TestWebApi.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
       "Microsoft.NET.Test.Sdk >= 16.2.0",
+      "TestWebApi.Domain >= 1.0.0",
+      "TestWebApi.Shared >= 1.0.0",
       "coverlet.collector >= 1.0.1",
       "xunit >= 2.4.0",
       "xunit.runner.visualstudio >= 2.4.0"
@@ -6546,7 +6578,14 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Domain\\TestWebApi.Domain.csproj": {
+              "projectPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Domain\\TestWebApi.Domain.csproj"
+            },
+            "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj": {
+              "projectPath": "C:\\Users\\tunii\\source\\repos\\LiteObject\\TestWebApi\\TestWebApi.Shared\\TestWebApi.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

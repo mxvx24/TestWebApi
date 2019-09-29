@@ -174,6 +174,8 @@
                     });
 
             services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
+            services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
+
             services.AddHealthChecks().AddMemoryHealthCheck("memory");
         }
 

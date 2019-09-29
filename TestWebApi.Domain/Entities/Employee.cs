@@ -1,5 +1,6 @@
 ﻿namespace TestWebApi.Domain.Entities
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -30,5 +31,20 @@
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the address id.
+        /// </summary>
+        public int? AddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the address.
+        /// </summary>
+        public Address Address { get; set; }
+
+        /// <summary>
+        /// Gets or sets the skills.
+        /// </summary>
+        public virtual ICollection<EmployeeSkill> Skills { get; set; } = new List<EmployeeSkill>();
     }
 }

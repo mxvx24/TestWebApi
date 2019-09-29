@@ -5,3 +5,4 @@ C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\ne
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp2.2\TestWebApi.Domain.AssemblyInfo.cs
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp2.2\TestWebApi.Domain.dll
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp2.2\TestWebApi.Domain.pdb
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.Domain\obj\Debug\netcoreapp2.2\TestWebApi.Domain.csprojAssemblyReference.cache

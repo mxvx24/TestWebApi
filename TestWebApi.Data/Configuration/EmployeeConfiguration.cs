@@ -8,7 +8,7 @@
     /// <summary>
     /// The employee configuration.
     /// </summary>
-    public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
+    internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
         /// <summary>
         /// The configure.

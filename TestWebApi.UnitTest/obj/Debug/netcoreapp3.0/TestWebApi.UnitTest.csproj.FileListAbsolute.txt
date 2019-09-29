@@ -91,3 +91,8 @@ C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\obj\Debug\
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\obj\Debug\netcoreapp3.0\TestWebApi.UnitTest.csproj.CopyComplete
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\obj\Debug\netcoreapp3.0\TestWebApi.UnitTest.dll
 C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\obj\Debug\netcoreapp3.0\TestWebApi.UnitTest.pdb
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\obj\Debug\netcoreapp3.0\TestWebApi.UnitTest.csprojAssemblyReference.cache
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\bin\Debug\netcoreapp3.0\TestWebApi.Domain.dll
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\bin\Debug\netcoreapp3.0\TestWebApi.Shared.dll
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\bin\Debug\netcoreapp3.0\TestWebApi.Domain.pdb
+C:\Users\tunii\source\repos\LiteObject\TestWebApi\TestWebApi.UnitTest\bin\Debug\netcoreapp3.0\TestWebApi.Shared.pdb

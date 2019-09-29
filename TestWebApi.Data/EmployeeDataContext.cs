@@ -90,6 +90,9 @@
 
             // modelBuilder.Entity<Employee>().HasData(DataGenerator.GetEmployee(5000));
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeSkillConfiguration());
         }
     }
 }
