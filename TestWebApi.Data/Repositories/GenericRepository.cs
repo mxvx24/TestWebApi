@@ -9,6 +9,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using TestWebApi.Domain.Entities;
+    using TestWebApi.Domain.Specifications;
 
     /// <summary>
     /// The generic repository.
@@ -22,7 +23,6 @@
     public class GenericRepository<TEntity, TContext> : IRepository<TEntity>, IDisposable
         where TEntity : BaseEntity
         where TContext : DbContext
-
     {
         /// <summary>
         /// The database set.
@@ -58,13 +58,19 @@
         }
 
         /// <inheritdoc />
-        public async Task<List<TEntity>> FindAsync(
+        public virtual async Task<List<TEntity>> FindAsync(
             Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = this.GetAllIncluding(includeProperties);
             var results = await query.Where(predicate).ToListAsync();
             return results;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<List<TEntity>> FindAsync(Specification<TEntity> specification)
+        {
+            return await this.DbSet.Where(specification.ToExpression()).ToListAsync();
         }
 
         /// <inheritdoc />
@@ -80,7 +86,7 @@
             var results = query.Where(predicate).AsNoTracking().ToList();
             return results;
         }
-
+        
         /// <inheritdoc />
         public virtual async Task<List<TEntity>> GetAllAsync()
         {
