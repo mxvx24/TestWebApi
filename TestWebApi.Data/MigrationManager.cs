@@ -1,0 +1,45 @@
+﻿namespace TestWebApi.Data
+{
+    using System;
+
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+
+    /// <summary>
+    /// The migration manager.
+    /// </summary>
+    public static class MigrationManager
+    {
+        /// <summary>
+        /// The migrate database.
+        /// </summary>
+        /// <param name="webHost">
+        /// The web host.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IWebHost"/>.
+        /// </returns>
+        public static IWebHost MigrateDatabase(this IWebHost webHost)
+        {
+            using (var scope = webHost.Services.CreateScope())
+            {
+                using (var context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
+                {
+                    try
+                    {
+                        // context.Database.EnsureDeleted();
+                        context.Database.Migrate();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw;
+                    }
+                }
+            }
+
+            return webHost;
+        }
+    }
+}
