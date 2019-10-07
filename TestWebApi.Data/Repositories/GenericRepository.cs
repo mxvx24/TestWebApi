@@ -6,6 +6,11 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+
+    using DelegateDecompiler.EntityFramework;
+
     using Microsoft.EntityFrameworkCore;
 
     using TestWebApi.Domain.Entities;
@@ -35,6 +40,11 @@
         protected readonly TContext Context;
 
         /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper mapper;
+
+        /// <summary>
         /// Has Dispose already been called?
         /// </summary>
         private bool disposed;
@@ -45,10 +55,14 @@
         /// <param name="context">
         /// The context.
         /// </param>
-        public GenericRepository(TContext context)
+        /// <param name="mapper">
+        /// The mapper.
+        /// </param>
+        public GenericRepository(TContext context, IMapper mapper)
         {
             this.Context = context;
             this.DbSet = this.Context.Set<TEntity>();
+            this.mapper = mapper;
         }
 
         /// <inheritdoc />
@@ -65,6 +79,15 @@
             var query = this.GetAllIncluding(includeProperties);
             var results = await query.Where(predicate).ToListAsync();
             return results;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<List<T1>> FindAsync<T1>(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = this.GetAllIncluding(includeProperties);
+            return await query.Where(predicate).ProjectTo<T1>(this.mapper.ConfigurationProvider).DecompileAsync().ToListAsync();
         }
 
         /// <inheritdoc />
@@ -86,7 +109,7 @@
             var results = query.Where(predicate).AsNoTracking().ToList();
             return results;
         }
-        
+
         /// <inheritdoc />
         public virtual async Task<List<TEntity>> GetAllAsync()
         {

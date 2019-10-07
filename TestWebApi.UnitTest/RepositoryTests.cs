@@ -5,6 +5,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    using AutoMapper;
+
     using Microsoft.EntityFrameworkCore;
 
     using TestWebApi.Data;
@@ -51,7 +53,7 @@
         public async Task TestActiveEmployeeSpecification()
         {
             // ARRANGE
-            var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context);
+            // var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, );
             // var activeEmployeeSpecification = new ActiveEmployeeSpecification();
 
             // ACT
