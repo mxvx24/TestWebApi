@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Logging;
 
     using TestWebApi.Data;
     using TestWebApi.Data.Repositories;
@@ -23,6 +24,12 @@
     [ApiController]
     public class EmployeesController : ControllerBase
     {
+
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        private readonly ILogger logger;
+
         /// <summary>
         /// The _context.
         /// </summary>
@@ -48,16 +55,22 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeesController"/> class.
         /// </summary>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
         /// <param name="repository">
         /// The repository.
         /// </param>
         /// <param name="context">
         /// The context.
         /// </param>
-        public EmployeesController(IRepository<Employee> repository, EmployeeDataContext context)
+        public EmployeesController(ILogger<EmployeesController> logger, IRepository<Employee> repository, EmployeeDataContext context)
         {
             this.employeeRepository = repository;
             this.context = context;
+            this.logger = logger;
+
+            this.logger.LogTrace($"{nameof(EmployeesController)} class has been instantiated.");
         }
         
         /*[HttpGet("/test")]

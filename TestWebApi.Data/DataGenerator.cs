@@ -33,6 +33,7 @@
                     LastName = $"Last_{i}",
                     Email = $"email_{i}@email.com",
                     Title = $"Title_{i}",
+                    UserAccountControl = GetRandomUserAccountControlValue(),
                     CreatedBy = "System",
                     CreatedOn = DateTime.UtcNow
                 });
@@ -106,6 +107,20 @@
         {
             var values = Enum.GetValues(typeof(States));
             return (States)values.GetValue(new Random().Next(values.Length));
+        }
+
+        /// <summary>
+        /// The get random user account control value.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        private static int GetRandomUserAccountControlValue()
+        {
+            // 512 Enabled Account, 514 Disabled Account
+            var values = new[] { 512, 514 };
+            var randomIndex = new Random().Next(values.Length);
+            return values[randomIndex];
         }
     }
 }
