@@ -7,6 +7,7 @@
     using AutoMapper;
 
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -78,15 +79,34 @@
         /// <param name="env">
         /// The env.
         /// </param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        /// <param name="loggerFactory">
+        /// The logger Factory.
+        /// </param>
+        /// <param name="mapper">
+        /// The auto mapper object.
+        /// </param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
         {
-            /* To create database from startup
-             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
-                context.Database.Migrate();
-            } */
-            
+            // Error handling middleware should be the first in the pipeline
+            app.UseExceptionHandler(
+                appBuilder =>
+                    {
+                        appBuilder.Run(
+                            async (context) =>
+                                {
+                                    var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                                    if (exceptionHandlerFeature != null)
+                                    {
+                                        var logger = loggerFactory.CreateLogger("Global Exception Logger");
+                                        logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
+                                    }
+
+                                    // Response to client
+                                    context.Response.StatusCode = 500;
+                                    await context.Response.WriteAsync("Encountered an unexpected fault. Try again later.");
+                                });
+                    });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -96,6 +116,13 @@
                 // Adds strict transport security header
                 app.UseHsts();
             }
+
+            /* To create database from startup
+             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<EmployeeDataContext>();
+                context.Database.Migrate();
+            } */
 
             app.UseHealthChecks(
                 "/healthcheck",
