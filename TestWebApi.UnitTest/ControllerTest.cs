@@ -1,6 +1,5 @@
 ﻿namespace TestWebApi.UnitTest
 {
-    // using Microsoft.Extensions.Diagnostics.HealthChecks;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -50,12 +49,6 @@
             var services = new ServiceCollection();
             this.provider = services
                 .AddEntityFrameworkInMemoryDatabase()
-                .AddDbContext<EmployeeDataContext>(
-                    (provider, options) =>
-                        {
-                            options.UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging()
-                                .UseInternalServiceProvider(provider);
-                        })
                 .AddDbContext<EmployeeDataContext>(
                     (provider, options) =>
                         {

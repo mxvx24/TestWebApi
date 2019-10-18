@@ -2,16 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     using AutoMapper;
 
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
 
     using TestWebApi.Data;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
+    using TestWebApi.Domain.Specifications;
 
     using Xunit;
 
@@ -31,16 +34,38 @@
         private readonly EmployeeDataContext context;
 
         /// <summary>
+        /// The provider.
+        /// </summary>
+        private readonly ServiceProvider provider;
+
+        /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryTests"/> class.
         /// </summary>
         public RepositoryTests()
         {
             var databaseName = new Guid().ToString();
-            var options = new DbContextOptionsBuilder<EmployeeDataContext>().UseInMemoryDatabase(databaseName).Options;
+            var options = new DbContextOptionsBuilder<EmployeeDataContext>()
+                .UseInMemoryDatabase(databaseName).Options;
+            
             this.context = new EmployeeDataContext(options);
 
+
+
             this.context.Employees.AddRangeAsync(DataGenerator.GetEmployee(500));
+
             this.context.SaveChanges();
+            
+            var mapperConfig = new MapperConfiguration(
+                c =>
+                    {
+                    });
+
+            this.mapper = mapperConfig.CreateMapper();
         }
 
         /// <summary>
@@ -53,13 +78,16 @@
         public async Task TestActiveEmployeeSpecification()
         {
             // ARRANGE
-            // var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, );
-            // var activeEmployeeSpecification = new ActiveEmployeeSpecification();
+            var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, this.mapper);
+            var activeEmployeeSpecification = new ActiveEmployeeSpecification();
+            var activeEmployeesExpected = await this.context.Employees.Where(e => e.IsActive()).ToListAsync();
 
             // ACT
-            // var activeEmployees = repo.FindAsync()
+            var activeEmployeesActual = await repo.FindAsync(activeEmployeeSpecification);
 
             // ASSERT
+            Assert.NotNull(activeEmployeesActual);
+            Assert.Equal(activeEmployeesExpected.Count, activeEmployeesActual.Count);
         }
 
         /// <summary>

@@ -8,7 +8,7 @@
     /// <summary>
     /// The active user specification.
     /// </summary>
-    public class ActiveUserSpecification : Specification<Employee>
+    public class ActiveEmployeeSpecification : Specification<Employee>
     {
         /// <summary>
         /// The to expression.
