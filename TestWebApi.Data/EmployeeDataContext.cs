@@ -68,14 +68,13 @@
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true",
-                option =>
-                    {
-                        option.EnableRetryOnFailure();
-                    });
-
-            optionsBuilder.EnableSensitiveDataLogging();
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true",
+                    option => { option.EnableRetryOnFailure(); });
+                optionsBuilder.EnableSensitiveDataLogging();
+            }
         }
 
         /// <summary>
