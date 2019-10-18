@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using TestWebApi.Domain.Entities;
+    using TestWebApi.Domain.Specifications;
 
     /// <summary>
     /// The Repository interface.
@@ -62,6 +63,34 @@
         /// The <see cref="Task"/>.
         /// </returns>
         Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+
+        /// <summary>
+        /// The find async.
+        /// </summary>
+        /// <typeparam name="T1">
+        /// The return type
+        /// </typeparam>
+        /// <param name="predicate">
+        /// The predicate.
+        /// </param>
+        /// <param name="includeProperties">
+        /// The include properties.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<List<T1>> FindAsync<T1>(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+
+        /// <summary>
+        /// The find async.
+        /// </summary>
+        /// <param name="specification">
+        /// The specification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<List<T>> FindAsync(Specification<T> specification);
 
         /// <summary>
         /// The find.
