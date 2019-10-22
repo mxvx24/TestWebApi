@@ -66,9 +66,11 @@
         /// </param>
         public EmployeesController(ILogger<EmployeesController> logger, IRepository<Employee> repository, EmployeeDataContext context)
         {
-            this.employeeRepository = repository;
-            this.context = context;
+            this.employeeRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.logger = logger;
+
+            this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             this.logger.LogTrace($"{nameof(EmployeesController)} class has been instantiated.");
         }
