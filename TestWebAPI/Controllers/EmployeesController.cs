@@ -31,7 +31,7 @@
         private readonly ILogger logger;
 
         /// <summary>
-        /// The _context.
+        /// The _context. Only needed for compiled query.
         /// </summary>
         private readonly EmployeeDataContext context;
 
@@ -67,6 +67,8 @@
         public EmployeesController(ILogger<EmployeesController> logger, IRepository<Employee> repository, EmployeeDataContext context)
         {
             this.employeeRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+
+            // ToDo: Remove context. Only needed for the use of compiled query.
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.logger = logger;
 
