@@ -12,6 +12,7 @@
     using Microsoft.Extensions.DependencyInjection;
 
     using TestWebApi.Data;
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
     using TestWebApi.Domain.Specifications;
@@ -53,9 +54,7 @@
                 .UseInMemoryDatabase(databaseName).Options;
             
             this.context = new EmployeeDataContext(options);
-
-
-
+            
             this.context.Employees.AddRangeAsync(DataGenerator.GetEmployee(500));
 
             this.context.SaveChanges();

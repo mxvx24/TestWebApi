@@ -6,6 +6,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
 
+    using TestWebApi.Data.Contexts;
+
     /// <summary>
     /// The migration manager.
     /// </summary>

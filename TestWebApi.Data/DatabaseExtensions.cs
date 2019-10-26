@@ -8,6 +8,8 @@
 
     using Microsoft.EntityFrameworkCore;
 
+    using TestWebApi.Data.Contexts;
+
     /// <summary>
     /// The database facade extensions.
     /// </summary>
