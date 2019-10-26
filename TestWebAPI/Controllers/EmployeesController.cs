@@ -12,11 +12,12 @@
     using Microsoft.Extensions.Logging;
 
     using TestWebApi.Data;
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
 
     using TestWebAPI.Library;
-    
+
     /// <summary>
     /// The employees controller.
     /// </summary>
@@ -76,7 +77,7 @@
 
             this.logger.LogTrace($"{nameof(EmployeesController)} class has been instantiated.");
         }
-        
+
         /*[HttpGet("/test")]
         public IActionResult<Employee> Test()
         {
@@ -120,8 +121,7 @@
             var employees = string.IsNullOrWhiteSpace(nameLike)
                                 ? await this.employeeRepository.GetAllAsync()
                                 : await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
-                                /* await this.employeeRepository.FindAsync(
-                                    e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)); */
+            /* await this.employeeRepository.FindAsync(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)); */
 
             if (!employees.Any())
             {
@@ -183,11 +183,11 @@
             {
                 return this.BadRequest();
             }
-            
+
             // this.context.Entry(employee.ToEntity()).State = EntityState.Modified;
             var existingEmployee = await this.context.Employees.FindAsync(id);
             Util.CopyValues(employee.ToEntity(), existingEmployee, true);
-            
+
             try
             {
                 await this.context.SaveChangesAsync();
@@ -231,14 +231,14 @@
             var employeeDto = employee.ToDto();
 
             patch.ApplyTo(employeeDto, this.ModelState);
-            
+
             this.TryValidateModel(employeeDto);
 
             if (!this.ModelState.IsValid)
             {
                 return this.BadRequest(this.ModelState);
             }
-            
+
             return this.Ok();
         }
 
@@ -271,7 +271,7 @@
 
             return this.Ok(employee);
         }
-        
+
         /// <summary>
         /// The get database date time.
         /// </summary>
@@ -294,6 +294,13 @@
             }
 
             return this.Ok(result);
+        }
+
+        [HttpGet("exception")]
+        public async Task<IActionResult> GetException()
+        {
+            throw new Exception("Test Exception. Please ignore.");
+            return Ok();
         }
 
         /// <summary>
