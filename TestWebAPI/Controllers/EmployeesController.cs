@@ -14,9 +14,11 @@
     using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-    using TestWebApi.Domain.Entities;
 
+    using TestWebAPI.DTOs;
     using TestWebAPI.Library;
+
+    using Employee = TestWebApi.Domain.Entities.Employee;
 
     /// <summary>
     /// The employees controller.
@@ -109,19 +111,57 @@
         /// <summary>
         /// The get employees.
         /// </summary>
+        /// <param name="employeeRequestFilter">
+        /// The employee request filter.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet("")]
+        public async Task<IActionResult> GetEmployees([FromQuery] EmployeeRequestFilter employeeRequestFilter)
+        {
+            IEnumerable<DTOs.Employee> employees = null;
+
+            // Create default predicate (returns all tasks)
+            var predicate = PredicateBuilder.True<Employee>();
+
+            // ToDo: Too many "if" statements
+            if (employeeRequestFilter.FirstName != null)
+            {
+                predicate = predicate.And(e => employeeRequestFilter.FirstName.Contains(e.FirstName));
+            }
+
+            if (employeeRequestFilter.LastName != null)
+            {
+                predicate = predicate.And(e => employeeRequestFilter.LastName.Contains(e.LastName));
+            }
+
+            employees = await this.employeeRepository.FindAsync<DTOs.Employee>(predicate);
+            
+            if (employees is null || !employees.Any())
+            {
+                return this.NotFound(employees);
+            }
+
+            return this.Ok(employees);
+        }
+
+        /// <summary>
+        /// The get employees.
+        /// </summary>
         /// <param name="nameLike">
         /// The name Like.
         /// </param>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] string nameLike = default)
         {
             var employees = string.IsNullOrWhiteSpace(nameLike)
                                 ? await this.employeeRepository.GetAllAsync()
                                 : await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
-            /* await this.employeeRepository.FindAsync(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)); */
+            // await this.employeeRepository.FindAsync(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike));
 
             if (!employees.Any())
             {
@@ -129,7 +169,7 @@
             }
 
             return this.Ok(employees);
-        }
+        } */
 
         /// <summary>
         /// The post employee.
