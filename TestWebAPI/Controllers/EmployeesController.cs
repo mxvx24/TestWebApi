@@ -12,11 +12,14 @@
     using Microsoft.Extensions.Logging;
 
     using TestWebApi.Data;
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
-    using TestWebApi.Domain.Entities;
 
+    using TestWebAPI.DTOs;
     using TestWebAPI.Library;
-    
+
+    using Employee = TestWebApi.Domain.Entities.Employee;
+
     /// <summary>
     /// The employees controller.
     /// </summary>
@@ -31,7 +34,7 @@
         private readonly ILogger logger;
 
         /// <summary>
-        /// The _context.
+        /// The _context. Only needed for compiled query.
         /// </summary>
         private readonly EmployeeDataContext context;
 
@@ -66,13 +69,17 @@
         /// </param>
         public EmployeesController(ILogger<EmployeesController> logger, IRepository<Employee> repository, EmployeeDataContext context)
         {
-            this.employeeRepository = repository;
-            this.context = context;
+            this.employeeRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+
+            // ToDo: Remove context. Only needed for the use of compiled query.
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.logger = logger;
+
+            this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             this.logger.LogTrace($"{nameof(EmployeesController)} class has been instantiated.");
         }
-        
+
         /*[HttpGet("/test")]
         public IActionResult<Employee> Test()
         {
@@ -104,20 +111,57 @@
         /// <summary>
         /// The get employees.
         /// </summary>
+        /// <param name="employeeRequestFilter">
+        /// The employee request filter.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet("")]
+        public async Task<IActionResult> GetEmployees([FromQuery] EmployeeRequestFilter employeeRequestFilter)
+        {
+            IEnumerable<DTOs.Employee> employees = null;
+
+            // Create default predicate (returns all tasks)
+            var predicate = PredicateBuilder.True<Employee>();
+
+            // ToDo: Too many "if" statements
+            if (employeeRequestFilter.FirstName != null)
+            {
+                predicate = predicate.And(e => employeeRequestFilter.FirstName.Contains(e.FirstName));
+            }
+
+            if (employeeRequestFilter.LastName != null)
+            {
+                predicate = predicate.And(e => employeeRequestFilter.LastName.Contains(e.LastName));
+            }
+
+            employees = await this.employeeRepository.FindAsync<DTOs.Employee>(predicate);
+            
+            if (employees is null || !employees.Any())
+            {
+                return this.NotFound(employees);
+            }
+
+            return this.Ok(employees);
+        }
+
+        /// <summary>
+        /// The get employees.
+        /// </summary>
         /// <param name="nameLike">
         /// The name Like.
         /// </param>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] string nameLike = default)
         {
             var employees = string.IsNullOrWhiteSpace(nameLike)
                                 ? await this.employeeRepository.GetAllAsync()
                                 : await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
-                                /* await this.employeeRepository.FindAsync(
-                                    e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike)); */
+            // await this.employeeRepository.FindAsync(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike));
 
             if (!employees.Any())
             {
@@ -125,7 +169,7 @@
             }
 
             return this.Ok(employees);
-        }
+        } */
 
         /// <summary>
         /// The post employee.
@@ -179,11 +223,11 @@
             {
                 return this.BadRequest();
             }
-            
+
             // this.context.Entry(employee.ToEntity()).State = EntityState.Modified;
             var existingEmployee = await this.context.Employees.FindAsync(id);
             Util.CopyValues(employee.ToEntity(), existingEmployee, true);
-            
+
             try
             {
                 await this.context.SaveChangesAsync();
@@ -227,14 +271,14 @@
             var employeeDto = employee.ToDto();
 
             patch.ApplyTo(employeeDto, this.ModelState);
-            
+
             this.TryValidateModel(employeeDto);
 
             if (!this.ModelState.IsValid)
             {
                 return this.BadRequest(this.ModelState);
             }
-            
+
             return this.Ok();
         }
 
@@ -267,7 +311,7 @@
 
             return this.Ok(employee);
         }
-        
+
         /// <summary>
         /// The get database date time.
         /// </summary>
@@ -290,6 +334,13 @@
             }
 
             return this.Ok(result);
+        }
+
+        [HttpGet("exception")]
+        public async Task<IActionResult> GetException()
+        {
+            throw new Exception("Test Exception. Please ignore.");
+            return Ok();
         }
 
         /// <summary>
