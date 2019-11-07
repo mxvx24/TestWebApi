@@ -1,9 +1,7 @@
 ﻿namespace TestWebApi.UnitTest
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using AutoMapper;
@@ -12,6 +10,7 @@
     using Microsoft.Extensions.DependencyInjection;
 
     using TestWebApi.Data;
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
     using TestWebApi.Domain.Specifications;
@@ -53,9 +52,7 @@
                 .UseInMemoryDatabase(databaseName).Options;
             
             this.context = new EmployeeDataContext(options);
-
-
-
+            
             this.context.Employees.AddRangeAsync(DataGenerator.GetEmployee(500));
 
             this.context.SaveChanges();

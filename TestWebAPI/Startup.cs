@@ -25,7 +25,7 @@
     using Swashbuckle.AspNetCore.Swagger;
 
     using TestWebApi.Data;
-
+    using TestWebApi.Data.Contexts;
     using TestWebApi.Data.Repositories;
 
     using TestWebApi.Domain.Entities;
@@ -109,7 +109,7 @@
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -127,9 +127,9 @@
             app.UseHealthChecks(
                 "/healthcheck",
                 new HealthCheckOptions()
-                    {
-                        ResponseWriter = WriteResponse
-            });
+                {
+                    ResponseWriter = WriteResponse
+                });
             app.UseHttpsRedirection();
             app.UseMvc();
 
@@ -203,17 +203,20 @@
                         var context = new EmployeeDataContext(optionsBuilder.Options);
 
                         context.OnSaveEventHandlers = EntityEventHandler.OnSave;
-                            
+
                         context.OnSaveEventHandlers += (entries) =>
                             {
                                 logger.LogInformation($"Delegate 2 Invoked.");
-                            }; 
+                            };
 
                         return context;
                     });
 
+            services.AddScoped<ProductDbContext>(sp => new ProductDbContext());
+
             services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
             services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
+            services.AddScoped<IRepository<Product>, GenericRepository<Product, ProductDbContext>>();
 
             services.AddHealthChecks().AddMemoryHealthCheck("memory");
 
