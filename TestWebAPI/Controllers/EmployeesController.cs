@@ -336,11 +336,19 @@
             return this.Ok(result);
         }
 
+        /// <summary>
+        /// The get exception.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// </exception>
         [HttpGet("exception")]
         public async Task<IActionResult> GetException()
         {
             throw new Exception("Test Exception. Please ignore.");
-            return Ok();
+            return this.Ok();
         }
 
         /// <summary>
