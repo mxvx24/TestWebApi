@@ -50,7 +50,7 @@
         /// </returns>
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
-            var localOptions = this.options.Get(context.Registration.Name);
+            MemoryCheckOptions localOptions = this.options.Get(context.Registration.Name);
 
             // Include GC information in the reported diagnostics.
             var allocated = GC.GetTotalMemory(forceFullCollection: false);
@@ -62,7 +62,7 @@
                                { "Gen2Collections", GC.CollectionCount(2) },
                            };
 
-            var status = (allocated < localOptions.Threshold) ?
+            HealthStatus status = (allocated < localOptions.Threshold) ?
                              HealthStatus.Healthy : HealthStatus.Unhealthy;
 
             return Task.FromResult(new HealthCheckResult(

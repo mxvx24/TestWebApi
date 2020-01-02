@@ -78,7 +78,7 @@
         [HttpGet("{id}")]
         public async Task<ActionResult<Address>> Get(int id)
         {
-            var address = await this.employeeRepository.GetAsync(id);
+            Address address = await this.employeeRepository.GetAsync(id);
 
             if (address is null)
             {

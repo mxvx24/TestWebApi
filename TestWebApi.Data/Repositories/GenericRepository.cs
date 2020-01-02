@@ -76,8 +76,8 @@
             Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
-            var results = await query.Where(predicate).ToListAsync();
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
+            List<TEntity> results = await query.Where(predicate).ToListAsync();
             return results;
         }
 
@@ -86,7 +86,7 @@
             Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
             return await query.Where(predicate).ProjectTo<T1>(this.mapper.ConfigurationProvider).DecompileAsync().ToListAsync();
         }
 
@@ -105,7 +105,7 @@
         /// <inheritdoc />
         public virtual List<TEntity> Find(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this.GetAllIncluding(includeProperties);
+            IQueryable<TEntity> query = this.GetAllIncluding(includeProperties);
             var results = query.Where(predicate).AsNoTracking().ToList();
             return results;
         }
@@ -183,7 +183,7 @@
         /// </returns>
         private IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var queryable = this.DbSet.AsNoTracking();
+            IQueryable<TEntity> queryable = this.DbSet.AsNoTracking();
             return includeProperties.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         }
     }
