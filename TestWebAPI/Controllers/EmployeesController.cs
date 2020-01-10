@@ -98,7 +98,9 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee([FromRoute] int id)
         {
-            var employee = await this.employeeRepository.GetAsync(id);
+            this.logger.LogInformation($"GetEmployee(...) has been invoked with parameter(s): id: {id}");
+
+            Employee employee = await this.employeeRepository.GetAsync(id);
 
             if (employee == null)
             {
@@ -158,7 +160,7 @@
         /*[HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] string nameLike = default)
         {
-            var employees = string.IsNullOrWhiteSpace(nameLike)
+            List<Employee> employees = string.IsNullOrWhiteSpace(nameLike)
                                 ? await this.employeeRepository.GetAllAsync()
                                 : await this.searchEmployeesByName(this.context, nameLike).ToListAsync();
             // await this.employeeRepository.FindAsync(e => e.FirstName.Contains(nameLike) || e.LastName.Contains(nameLike));
@@ -225,7 +227,7 @@
             }
 
             // this.context.Entry(employee.ToEntity()).State = EntityState.Modified;
-            var existingEmployee = await this.context.Employees.FindAsync(id);
+            Employee existingEmployee = await this.context.Employees.FindAsync(id);
             Util.CopyValues(employee.ToEntity(), existingEmployee, true);
 
             try
@@ -267,8 +269,8 @@
                 return this.BadRequest("Required parameters cannot be zero or null");
             }
 
-            var employee = await this.context.Employees.FindAsync(id);
-            var employeeDto = employee.ToDto();
+            Employee employee = await this.context.Employees.FindAsync(id);
+            DTOs.Employee employeeDto = employee.ToDto();
 
             patch.ApplyTo(employeeDto, this.ModelState);
 
@@ -299,7 +301,7 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            var employee = await this.context.Employees.FindAsync(id);
+            Employee employee = await this.context.Employees.FindAsync(id);
 
             if (employee == null)
             {
@@ -323,10 +325,10 @@
         {
             string result;
 
-            using (var connection = this.context.Database.GetDbConnection())
+            using (System.Data.Common.DbConnection connection = this.context.Database.GetDbConnection())
             {
-                connection.Open();
-                using (var command = connection.CreateCommand())
+                await connection.OpenAsync();
+                using (System.Data.Common.DbCommand command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT GETDATE()";
                     result = (string)await command.ExecuteScalarAsync();
@@ -340,12 +342,13 @@
         /// The get exception.
         /// </summary>
         /// <returns>
-        /// The <see cref="Task"/>.
+        /// The <see cref="IActionResult"/>.
         /// </returns>
         /// <exception cref="Exception">
+        /// The test exception.
         /// </exception>
         [HttpGet("exception")]
-        public async Task<IActionResult> GetException()
+        public IActionResult GetException()
         {
             throw new Exception("Test Exception. Please ignore.");
             return this.Ok();

@@ -35,11 +35,11 @@
                 throw new InvalidOperationException("Source or Target param cannot be null");
             }
 
-            var t = typeof(T);
+            Type t = typeof(T);
 
-            var properties = t.GetProperties().Where(prop => prop.CanRead && prop.CanWrite);
+            System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo> properties = t.GetProperties().Where(prop => prop.CanRead && prop.CanWrite);
 
-            foreach (var prop in properties)
+            foreach (System.Reflection.PropertyInfo prop in properties)
             {
                 var sourcePropValue = prop.GetValue(source, null);
 

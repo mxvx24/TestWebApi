@@ -23,10 +23,10 @@
         {
             var modifiedEntities = entries.Where(e => e.State == EntityState.Modified).ToList();
 
-            foreach (var entry in modifiedEntities)
+            foreach (EntityEntry entry in modifiedEntities)
             {
                 // var entity = entry.Entity;
-                foreach (var originalValuesProperty in entry.OriginalValues.Properties)
+                foreach (Microsoft.EntityFrameworkCore.Metadata.IProperty originalValuesProperty in entry.OriginalValues.Properties)
                 {
                     var originalValue = entry.OriginalValues[originalValuesProperty].ToString();
                     var currentValue = entry.CurrentValues[originalValuesProperty].ToString();

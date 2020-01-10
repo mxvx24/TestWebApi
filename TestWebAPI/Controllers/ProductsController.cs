@@ -1,21 +1,14 @@
 ﻿namespace TestWebAPI.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.JsonPatch;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
 
-    using TestWebApi.Data;
     using TestWebApi.Data.Repositories;
     using TestWebApi.Domain.Entities;
-
-    using TestWebAPI.Library;
 
     /// <summary>
     /// The Products controller.
@@ -64,7 +57,7 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct([FromRoute] int id)
         {
-            var product = await this.productRepository.GetAsync(id);
+            Product product = await this.productRepository.GetAsync(id).ConfigureAwait(false);
 
             if (product == null)
             {
@@ -86,9 +79,9 @@
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] string nameLike = default)
         {
-            var products = string.IsNullOrWhiteSpace(nameLike)
-                               ? await this.productRepository.GetAllAsync()
-                               : await this.productRepository.FindAsync(e => e.Name.Contains(nameLike));
+            List<Product> products = string.IsNullOrWhiteSpace(nameLike)
+                               ? await this.productRepository.GetAllAsync().ConfigureAwait(false)
+                               : await this.productRepository.FindAsync(e => e.Name.Contains(nameLike)).ConfigureAwait(false);
 
             if (!products.Any())
             {
@@ -115,8 +108,8 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            await this.productRepository.Add(product);
-            await this.productRepository.SaveChangesAsync();
+            await this.productRepository.Add(product).ConfigureAwait(false);
+            await this.productRepository.SaveChangesAsync().ConfigureAwait(false);
 
             return this.CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }

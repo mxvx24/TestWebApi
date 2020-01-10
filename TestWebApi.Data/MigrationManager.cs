@@ -24,9 +24,9 @@
         /// </returns>
         public static IWebHost MigrateDatabase(this IWebHost webHost)
         {
-            using (var scope = webHost.Services.CreateScope())
+            using (IServiceScope scope = webHost.Services.CreateScope())
             {
-                using (var context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
+                using (EmployeeDataContext context = scope.ServiceProvider.GetRequiredService<EmployeeDataContext>())
                 {
                     try
                     {

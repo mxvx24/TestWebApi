@@ -20,7 +20,8 @@
         /// </param>
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().MigrateDatabase().Run();
+            // CreateWebHostBuilder(args).Build().MigrateDatabase().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         /// <summary>

@@ -43,7 +43,7 @@
 
             var stopWatch = new Stopwatch();
 
-            var runCount = Enumerable.Range(0, 1000);
+            System.Collections.Generic.IEnumerable<int> runCount = Enumerable.Range(0, 1000);
 
             stopWatch.Start();
 
@@ -61,7 +61,7 @@
                                               // Content = 
                                           };
 
-                        var response = httpClient.SendAsync(request).Result;
+                        HttpResponseMessage response = httpClient.SendAsync(request).Result;
 
                         if (response.IsSuccessStatusCode)
                         {

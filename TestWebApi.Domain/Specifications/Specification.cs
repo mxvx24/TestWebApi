@@ -30,7 +30,7 @@
         /// </returns>
         public bool IsSatisfiedBy(T entity)
         {
-            var predicate = this.ToExpression().Compile();
+            Func<T, bool> predicate = this.ToExpression().Compile();
             return predicate(entity);
         }
 
