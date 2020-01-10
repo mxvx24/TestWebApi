@@ -31,6 +31,7 @@
     using TestWebApi.Domain.Entities;
 
     using TestWebAPI.EventHandlers;
+    using TestWebAPI.Library.ActionFilters;
     using TestWebAPI.Library.HealthChecks;
 
     /// <summary>
@@ -94,10 +95,10 @@
                         appBuilder.Run(
                             async (context) =>
                                 {
-                                    var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                                    IExceptionHandlerFeature exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
                                     if (exceptionHandlerFeature != null)
                                     {
-                                        var logger = loggerFactory.CreateLogger("Global Exception Logger");
+                                        ILogger logger = loggerFactory.CreateLogger("Global Exception Logger");
                                         logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
                                     }
 
@@ -153,8 +154,19 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .AddMvcOptions(
+                    options =>
+                        {
+                            options.Filters.Add(new ValidationActionFilterAttribute());
+                            options.Filters.Add<LoggingActionFilter>();
 
+                            // .NET Core 3.0 Solution for "self referencing loop" issue
+                            /* options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;*/
+                        });
+            
             services.AddLogging(
                 builder =>
                     {
@@ -184,7 +196,7 @@
             (for example, private fields) in your derived DbContext class that should not be shared across requests.
             services.AddDbContextPool<EmployeeDataContext>(options => { });  */
 
-            var logger = this.LoggerFactory.CreateLogger("Delegate");
+            ILogger logger = this.LoggerFactory.CreateLogger("Delegate");
 
             services.AddScoped<EmployeeDataContext>(
                 sp =>
@@ -255,9 +267,7 @@
                                 new JObject(
                                     new JProperty("status", pair.Value.Status.ToString()),
                                     new JProperty("description", pair.Value.Description),
-                                    new JProperty(
-                                        "data",
-                                        new JObject(pair.Value.Data.Select(p => new JProperty(p.Key, p.Value))))))))));
+                                    new JProperty("data", new JObject(pair.Value.Data.Select(p => new JProperty(p.Key, p.Value))))))))));
 
             return httpContext.Response.WriteAsync(json.ToString(Formatting.Indented));
         }

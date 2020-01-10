@@ -48,7 +48,7 @@
         public RepositoryTests()
         {
             var databaseName = new Guid().ToString();
-            var options = new DbContextOptionsBuilder<EmployeeDataContext>()
+            DbContextOptions<EmployeeDataContext> options = new DbContextOptionsBuilder<EmployeeDataContext>()
                 .UseInMemoryDatabase(databaseName).Options;
             
             this.context = new EmployeeDataContext(options);
@@ -77,10 +77,10 @@
             // ARRANGE
             var repo = new GenericRepository<Employee, EmployeeDataContext>(this.context, this.mapper);
             var activeEmployeeSpecification = new ActiveEmployeeSpecification();
-            var activeEmployeesExpected = await this.context.Employees.Where(e => e.IsActive()).ToListAsync();
+            List<Employee> activeEmployeesExpected = await this.context.Employees.Where(e => e.IsActive()).ToListAsync();
 
             // ACT
-            var activeEmployeesActual = await repo.FindAsync(activeEmployeeSpecification);
+            List<Employee> activeEmployeesActual = await repo.FindAsync(activeEmployeeSpecification);
 
             // ASSERT
             Assert.NotNull(activeEmployeesActual);

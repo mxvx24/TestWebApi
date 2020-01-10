@@ -49,7 +49,7 @@ namespace TestWebApi.IntegrationTest
             var request = new HttpRequestMessage(new HttpMethod(method), "/api/values");
 
             // ACT
-            var response = await this.client.SendAsync(request);
+            HttpResponseMessage response = await this.client.SendAsync(request);
 
             // ASSERT
             response.EnsureSuccessStatusCode();

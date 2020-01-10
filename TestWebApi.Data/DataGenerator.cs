@@ -105,7 +105,7 @@
         /// </returns>
         private static States GetRandomState()
         {
-            var values = Enum.GetValues(typeof(States));
+            Array values = Enum.GetValues(typeof(States));
             return (States)values.GetValue(new Random().Next(values.Length));
         }
 
