@@ -3,13 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using AutoMapper;
 
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
 
     using TestWebApi.Data;
     using TestWebApi.Data.Contexts;
@@ -25,24 +23,19 @@
     public class RepositoryTests : IDisposable
     {
         /// <summary>
-        /// Flag: Has Dispose already been called?
-        /// </summary>
-        private bool disposed = false;
-
-        /// <summary>
         /// The context.
         /// </summary>
         private readonly EmployeeDataContext context;
 
         /// <summary>
-        /// The provider.
-        /// </summary>
-        private readonly ServiceProvider provider;
-
-        /// <summary>
         /// The mapper.
         /// </summary>
         private readonly IMapper mapper;
+
+        /// <summary>
+        /// Flag: Has Dispose already been called?
+        /// </summary>
+        private bool disposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryTests"/> class.
@@ -52,13 +45,13 @@
             var databaseName = new Guid().ToString();
             DbContextOptions<EmployeeDataContext> options = new DbContextOptionsBuilder<EmployeeDataContext>()
                 .UseInMemoryDatabase(databaseName).Options;
-            
+
             this.context = new EmployeeDataContext(options);
-            
+
             this.context.Employees.AddRangeAsync(DataGenerator.GetEmployee(500));
 
             this.context.SaveChanges();
-            
+
             var mapperConfig = new MapperConfiguration(
                 c =>
                     {

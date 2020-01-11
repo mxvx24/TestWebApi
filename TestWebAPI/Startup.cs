@@ -16,6 +16,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.OpenApi.Models;
 
@@ -33,6 +34,9 @@
     using TestWebAPI.EventHandlers;
     using TestWebAPI.Library.ActionFilters;
     using TestWebAPI.Library.HealthChecks;
+    using TestWebAPI.Services;
+
+    using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
     /// <summary>
     /// The startup.
@@ -109,6 +113,9 @@
                     });
 
             if (env.IsDevelopment())
+
+
+
             {
                 // app.UseDeveloperExceptionPage();
             }
@@ -173,6 +180,17 @@
                         builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Trace);
                     });
 
+            // services.AddSingleton<IHostedService, ProductUpdateHostedService>();
+            // services.AddHostedService<ProductUpdateHostedService>();
+
+            // services.AddHostedService<QueuedHostedService>();
+            services.AddSingleton<IHostedService, QueuedHostedService>();
+
+            services.AddSingleton<ITaskQueue, TaskQueue>();
+            
+            // Register worker
+            // services.AddScoped<CustomerIoEventBackgroundWork.Worker>();
+
             var connectionString =
                 "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true";
 
@@ -229,6 +247,8 @@
             services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
             services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
             services.AddScoped<IRepository<Product>, GenericRepository<Product, ProductDbContext>>();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddHealthChecks().AddMemoryHealthCheck("memory");
 

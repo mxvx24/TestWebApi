@@ -1,6 +1,8 @@
 ﻿namespace TestWebApi.Data.Contexts
 {
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Console;
 
     using TestWebApi.Domain.Entities;
 
@@ -36,6 +38,13 @@
                     "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true",
                     option => { option.EnableRetryOnFailure(); });
                 optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.UseLoggerFactory(new LoggerFactory(
+                    new[]
+                        {
+                            new ConsoleLoggerProvider(
+                                (category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information,
+                                true)
+                        }));
             }
         }
 
