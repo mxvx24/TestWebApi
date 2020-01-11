@@ -27,7 +27,6 @@
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-
         /// <summary>
         /// The logger.
         /// </summary>

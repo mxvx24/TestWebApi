@@ -86,7 +86,7 @@
             var controller = new EmployeesController(new Mock<ILogger<EmployeesController>>().Object, repo, this.context);
 
             // ACT
-            IActionResult result = await controller.GetEmployees();
+            IActionResult result = await controller.GetEmployees(null);
 
             // ASSERT
             OkObjectResult viewResult = Assert.IsType<OkObjectResult>(result);
