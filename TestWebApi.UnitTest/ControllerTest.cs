@@ -128,7 +128,7 @@
         public void TestUpdateLoanStatus()
         {
             // ARRANGE
-            ValuesController controller = new ValuesController();
+            LoansController controller = new LoansController();
             var validationResults = new List<ValidationResult>();
 
             var request = new UpdateStatusRequest()
@@ -154,7 +154,7 @@
         public void TestAddLoanStatus()
         {
             // ARRANGE
-            ValuesController controller = new ValuesController();
+            LoansController controller = new LoansController();
             var validationResults = new List<ValidationResult>();
 
             var request = new AddStatusRequest()
