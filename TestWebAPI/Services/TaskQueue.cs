@@ -32,7 +32,7 @@
         /// <param name="workItem">
         /// The work item.
         /// </param>
-        public void QueueWorkItem(Func<CancellationToken, DbContext, Task> workItem)
+        public void AddWorkItem(Func<CancellationToken, DbContext, Task> workItem)
         {
             if (workItem == null)
             {
@@ -54,7 +54,7 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task<Func<CancellationToken, DbContext, Task>> DequeueAsync(CancellationToken cancellationToken)
+        public async Task<Func<CancellationToken, DbContext, Task>> DequeueWorkItemAsync(CancellationToken cancellationToken)
         {
             // Blocks the current thread until it can enter the SemaphoreSlim.
             await this.signal.WaitAsync(cancellationToken);

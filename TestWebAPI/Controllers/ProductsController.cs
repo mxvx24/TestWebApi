@@ -178,7 +178,7 @@
             }
 
             // this.productUpdateHostedService.StartAsync(new System.Threading.CancellationToken());
-            this.taskQueue.QueueWorkItem(async (token, context) =>
+            this.taskQueue.AddWorkItem(async (token, context) =>
                 {
                     try
                     {
@@ -191,7 +191,7 @@
 
                     this.logger.LogInformation("About to execute the stored proc...");
                     
-                    _ = (context as ProductDbContext)?.Products.FromSql("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", "TestWebApiLoad" }).ToList();
+                    _ = (context as ProductDbContext)?.Products.FromSql("SpUpdateAllProducts @p0, @p1", new object[] { "1,2,3", $"{updatedBy}" }).ToList();
                 });
 
             return this.Accepted();
