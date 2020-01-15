@@ -113,9 +113,6 @@
                     });
 
             if (env.IsDevelopment())
-
-
-
             {
                 // app.UseDeveloperExceptionPage();
             }
@@ -136,7 +133,7 @@
                 "/healthcheck",
                 new HealthCheckOptions()
                 {
-                    ResponseWriter = WriteResponse
+                    ResponseWriter = WriteResponseAsync
                 });
             app.UseHttpsRedirection();
             app.UseMvc();
@@ -272,7 +269,7 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private static Task WriteResponse(HttpContext httpContext, HealthReport result)
+        private static Task WriteResponseAsync(HttpContext httpContext, HealthReport result)
         {
             httpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
