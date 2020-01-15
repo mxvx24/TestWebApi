@@ -109,7 +109,7 @@
 
             while (!this.shutdown.IsCancellationRequested)
             {
-                Func<CancellationToken, DbContext, Task> workItem = await this.TaskQueue.DequeueAsync(this.shutdown.Token);
+                Func<CancellationToken, DbContext, Task> workItem = await this.TaskQueue.DequeueWorkItemAsync(this.shutdown.Token);
 
                 try
                 {
@@ -135,9 +135,9 @@
                         ProductDbContext context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
                         await workItem(this.shutdown.Token, context);
                         
-                        TestWebApi.Domain.Entities.Product p = context.Products.FirstOrDefault();
+                        /*TestWebApi.Domain.Entities.Product p = context.Products.FirstOrDefault();
+                        this.logger.LogInformation($"UpdatedBy: {p?.UpdatedBy}"); */
 
-                        this.logger.LogInformation($"UpdatedBy: {p?.UpdatedBy}");
                         this.logger.LogInformation("Completed work-item.");
                     }
                 }

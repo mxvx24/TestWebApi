@@ -20,7 +20,7 @@
         /// <param name="workItem">
         /// The work item.
         /// </param>
-        void QueueWorkItem(Func<CancellationToken, DbContext, Task> workItem);
+        void AddWorkItem(Func<CancellationToken, DbContext, Task> workItem);
 
         /// <summary>
         /// The dequeue async.
@@ -31,7 +31,7 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        Task<Func<CancellationToken, DbContext, Task>> DequeueAsync(
+        Task<Func<CancellationToken, DbContext, Task>> DequeueWorkItemAsync(
             CancellationToken cancellationToken);      
     }
 }

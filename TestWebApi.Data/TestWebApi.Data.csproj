@@ -24,4 +24,8 @@
   <ItemGroup>
     <ProjectReference Include="..\TestWebApi.Domain\TestWebApi.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
 </Project>
