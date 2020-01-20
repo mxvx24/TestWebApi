@@ -3,15 +3,19 @@
     using System;
     using System.Linq;
     using System.Net.Mime;
+    using System.Net.NetworkInformation;
     using System.Threading.Tasks;
 
     using AutoMapper;
+
+    using HealthChecks.UI.Client;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -33,6 +37,7 @@
     using TestWebApi.Domain.Entities;
 
     using TestWebAPI.EventHandlers;
+    using TestWebAPI.Library;
     using TestWebAPI.Library.ActionFilters;
     using TestWebAPI.Library.HealthChecks;
     using TestWebAPI.Services;
@@ -181,7 +186,16 @@
             services.AddAutoMapper(typeof(Startup));
 
             // Registers health check services
-            services.AddHealthChecks().AddMemoryHealthCheck("memory");
+            services.AddHealthChecks()
+                .AddMemoryHealthCheck("memoryCheck", tags: new[] { "memory" })
+                .AddCheck<ProductDbContextHealthCheck>("ProductDbContextHealthCheck", tags: new[] { "database", "dbcontext" })
+                .AddCheck("Simple Status Check", () => HealthCheckResult.Healthy(), new[] { "status" })
+                .AddCheck("DatabaseConnectionCheck", new DatabaseConnectionCheck(connectionString), tags: new[] { "database" })
+                // .AddCheck<PingHealthCheck>("pingCheck")
+                .AddCheck("pingCheck", new PingHealthCheck("www.google.com", 100), tags: new[] { "ping", "network", "connection" });
+
+            // Registers required services for health checks
+            services.AddHealthChecksUI();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             // http://localhost:5000/swagger
@@ -244,12 +258,39 @@
                 context.Database.Migrate();
             } */
 
+            app.UseHealthChecksUI(config => config.UIPath = "/healthCheckUi");
+
+            // For default message
             app.UseHealthChecks(
-                "/healthcheck",
+                "/status",
                 new HealthCheckOptions()
                 {
+                    Predicate = (check) => check.Tags.Contains("status"),
+                    AllowCachingResponses = false,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
+            // For custom message
+            app.UseHealthChecks(
+                "/healthCheck",
+                new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ping") || check.Tags.Contains("memory"),
+                    AllowCachingResponses = false,
                     ResponseWriter = WriteResponseAsync
                 });
+
+            app.UseHealthChecks(
+                "/databaseConnectivityCheck",
+                new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("database") || check.Tags.Contains("sql") || check.Tags.Contains("dbcontext") || check.Tags.Contains("memory"),
+                    AllowCachingResponses = false,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
+            // app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
+
             app.UseHttpsRedirection();
             app.UseMvc();
 
@@ -263,7 +304,7 @@
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{this.ApplicationName} (V1)");
                 });
         }
-        
+
         /// <summary>
         /// The write response.
         /// </summary>
