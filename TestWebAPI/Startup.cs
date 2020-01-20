@@ -185,7 +185,8 @@
 
             services.AddAutoMapper(typeof(Startup));
 
-            // Registers health check services
+            /* For more details: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-2.2
+               For more checks: https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks */
             services.AddHealthChecks()
                 .AddMemoryHealthCheck("memoryCheck", tags: new[] { "memory" })
                 .AddCheck<ProductDbContextHealthCheck>("ProductDbContextHealthCheck", tags: new[] { "database", "dbcontext" })
