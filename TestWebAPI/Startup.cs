@@ -1,5 +1,6 @@
 ﻿namespace TestWebAPI
 {
+    using System;
     using System.Linq;
     using System.Net.Mime;
     using System.Threading.Tasks;
@@ -55,10 +56,17 @@
         /// </param>
         public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnvironment)
         {
-            this.Configuration = configuration;
-            this.LoggerFactory = loggerFactory;
-            this.HostingEnvironment = hostingEnvironment;
+            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            this.HostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+
+            this.ApplicationName = this.Configuration.GetValue<string>("ApplicationName") ?? "App Name Unavailable";
         }
+
+        /// <summary>
+        /// Gets the application name.
+        /// </summary>
+        public string ApplicationName { get; }
 
         /// <summary>
         /// Gets the configuration.
@@ -75,6 +83,113 @@
         /// </summary>
         public IHostingEnvironment HostingEnvironment { get; set; }
 
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">
+        /// The services.
+        /// </param>
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(Startup));
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .AddMvcOptions(
+                    options =>
+                    {
+                        options.Filters.Add(new ValidationActionFilterAttribute());
+                        options.Filters.Add<LoggingActionFilter>();
+
+                        // .NET Core 3.0 Solution for "self referencing loop" issue
+                        /* options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;*/
+                    });
+
+            services.AddLogging(
+                builder =>
+                {
+                    builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Trace);
+                });
+
+            // services.AddSingleton<IHostedService, ProductUpdateHostedService>();
+            // services.AddHostedService<ProductUpdateHostedService>();
+
+            // services.AddHostedService<QueuedHostedService>();
+            services.AddSingleton<IHostedService, QueuedHostedService>();
+
+            services.AddSingleton<ITaskQueue, TaskQueue>();
+
+            // services.AddScoped<CustomerIoEventBackgroundWork.Worker>();
+
+            var connectionString =
+                "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+            // var optionsBuilder = new DbContextOptionsBuilder<EmployeeDataContext>();
+            /*services.AddDbContext<EmployeeDataContext>(optionsBuilder =>
+                {
+                    optionsBuilder.UseSqlServer(
+                        connectionString,
+                        option =>
+                            {
+                            option.EnableRetryOnFailure();
+                        });
+
+                optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.UseLoggerFactory(this.LoggerFactory);
+            });*/
+
+            /*
+            https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.0#dbcontext-pooling 
+            Pooling has some performance gains. Avoid using DbContext Pooling if you maintain your own state 
+            (for example, private fields) in your derived DbContext class that should not be shared across requests.
+            services.AddDbContextPool<EmployeeDataContext>(options => { });  */
+
+            ILogger logger = this.LoggerFactory.CreateLogger("Delegate");
+
+            services.AddScoped<EmployeeDataContext>(
+                sp =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<EmployeeDataContext>();
+                    optionsBuilder.UseSqlServer(
+                        connectionString,
+                        option =>
+                        {
+                            option.EnableRetryOnFailure();
+                        });
+
+                    optionsBuilder.EnableSensitiveDataLogging();
+                    optionsBuilder.UseLoggerFactory(this.LoggerFactory);
+
+                    var context = new EmployeeDataContext(optionsBuilder.Options);
+
+                    context.OnSaveEventHandlers = EntityEventHandler.OnSave;
+
+                    context.OnSaveEventHandlers += (entries) =>
+                    {
+                        logger.LogInformation($"Delegate 2 Invoked.");
+                    };
+
+                    return context;
+                });
+
+            services.AddScoped<ProductDbContext>(sp => new ProductDbContext());
+
+            services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
+            services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
+            services.AddScoped<IRepository<Product>, GenericRepository<Product, ProductDbContext>>();
+
+            services.AddAutoMapper(typeof(Startup));
+
+            // Registers health check services
+            services.AddHealthChecks().AddMemoryHealthCheck("memory");
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            // http://localhost:5000/swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = $"{this.ApplicationName}", Version = "v1" });
+            });
+        }
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
@@ -145,118 +260,10 @@
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test Web API (V1)");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{this.ApplicationName} (V1)");
                 });
         }
-
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services">
-        /// The services.
-        /// </param>
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddAutoMapper(typeof(Startup));
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
-                .AddMvcOptions(
-                    options =>
-                        {
-                            options.Filters.Add(new ValidationActionFilterAttribute());
-                            options.Filters.Add<LoggingActionFilter>();
-
-                            // .NET Core 3.0 Solution for "self referencing loop" issue
-                            /* options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;*/
-                        });
-            
-            services.AddLogging(
-                builder =>
-                    {
-                        builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Trace);
-                    });
-
-            // services.AddSingleton<IHostedService, ProductUpdateHostedService>();
-            // services.AddHostedService<ProductUpdateHostedService>();
-
-            // services.AddHostedService<QueuedHostedService>();
-            services.AddSingleton<IHostedService, QueuedHostedService>();
-
-            services.AddSingleton<ITaskQueue, TaskQueue>();
-            
-            // Register worker
-            // services.AddScoped<CustomerIoEventBackgroundWork.Worker>();
-
-            var connectionString =
-                "Server=(localdb)\\mssqllocaldb;Database=Test-WebApi-local;Trusted_Connection=True;MultipleActiveResultSets=true";
-
-            // var optionsBuilder = new DbContextOptionsBuilder<EmployeeDataContext>();
-            /*services.AddDbContext<EmployeeDataContext>(optionsBuilder =>
-                {
-                    optionsBuilder.UseSqlServer(
-                        connectionString,
-                        option =>
-                            {
-                            option.EnableRetryOnFailure();
-                        });
-
-                optionsBuilder.EnableSensitiveDataLogging();
-                optionsBuilder.UseLoggerFactory(this.LoggerFactory);
-            });*/
-
-            /*
-            https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.0#dbcontext-pooling 
-            Pooling has some performance gains. Avoid using DbContext Pooling if you maintain your own state 
-            (for example, private fields) in your derived DbContext class that should not be shared across requests.
-            services.AddDbContextPool<EmployeeDataContext>(options => { });  */
-
-            ILogger logger = this.LoggerFactory.CreateLogger("Delegate");
-
-            services.AddScoped<EmployeeDataContext>(
-                sp =>
-                    {
-                        var optionsBuilder = new DbContextOptionsBuilder<EmployeeDataContext>();
-                        optionsBuilder.UseSqlServer(
-                            connectionString,
-                            option =>
-                                {
-                                    option.EnableRetryOnFailure();
-                                });
-
-                        optionsBuilder.EnableSensitiveDataLogging();
-                        optionsBuilder.UseLoggerFactory(this.LoggerFactory);
-
-                        var context = new EmployeeDataContext(optionsBuilder.Options);
-
-                        context.OnSaveEventHandlers = EntityEventHandler.OnSave;
-
-                        context.OnSaveEventHandlers += (entries) =>
-                            {
-                                logger.LogInformation($"Delegate 2 Invoked.");
-                            };
-
-                        return context;
-                    });
-
-            services.AddScoped<ProductDbContext>(sp => new ProductDbContext());
-
-            services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
-            services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
-            services.AddScoped<IRepository<Product>, GenericRepository<Product, ProductDbContext>>();
-
-            services.AddAutoMapper(typeof(Startup));
-
-            services.AddHealthChecks().AddMemoryHealthCheck("memory");
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            // http://localhost:5000/swagger
-            services.AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new Info { Title = "Test Web API", Version = "v1" });
-                });
-        }
-
+        
         /// <summary>
         /// The write response.
         /// </summary>
