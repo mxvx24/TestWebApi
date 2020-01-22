@@ -1,6 +1,7 @@
 ﻿namespace TestWebAPI
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Net.Mime;
     using System.Net.NetworkInformation;
@@ -18,11 +19,13 @@
     using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Internal;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Primitives;
     using Microsoft.OpenApi.Models;
 
     using Newtonsoft.Json;
@@ -36,12 +39,14 @@
 
     using TestWebApi.Domain.Entities;
 
+    using TestWebAPI.DTOs;
     using TestWebAPI.EventHandlers;
     using TestWebAPI.Library;
     using TestWebAPI.Library.ActionFilters;
     using TestWebAPI.Library.HealthChecks;
     using TestWebAPI.Services;
 
+    using Employee = TestWebApi.Domain.Entities.Employee;
     using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
     /// <summary>
@@ -182,6 +187,23 @@
             services.AddScoped<IRepository<Employee>, GenericRepository<Employee, EmployeeDataContext>>();
             services.AddScoped<IRepository<Address>, GenericRepository<Address, EmployeeDataContext>>();
             services.AddScoped<IRepository<Product>, GenericRepository<Product, ProductDbContext>>();
+
+            services.AddHttpContextAccessor();
+
+            // How to use header value to determine object creation: either inject httpContextAccessor to object ctor or do the following:
+            services.AddScoped<DTOs.Configuration>(implementationFactory: provider =>
+                {
+                    var config = new Configuration();
+
+                    StringValues? i = provider.GetService<IHttpContextAccessor>()?.HttpContext?.Request?.Headers["id"];
+
+                    if (i.HasValue && i.Any() && int.TryParse(i.Value.Single(), out int id))
+                    {
+                        config.Id = id;
+                    }
+
+                    return config;
+                });
 
             services.AddAutoMapper(typeof(Startup));
 
