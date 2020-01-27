@@ -1,5 +1,7 @@
 ﻿namespace TestWebAPI
 {
+    using System;
+
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
 
@@ -20,6 +22,8 @@
         /// </param>
         public static void Main(string[] args)
         {
+            Console.Title = "Test Web API";
+
             // CreateWebHostBuilder(args).Build().MigrateDatabase().Run();
             CreateWebHostBuilder(args).Build().Run();
         }
