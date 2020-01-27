@@ -31,7 +31,7 @@
         /// </summary>
         static Program()
         {
-            // Test // Test 1
+            // Test
             HttpClient = new HttpClient() { BaseAddress = new Uri("http://localhost:5000") };
             HttpClient.DefaultRequestHeaders.Clear();
             HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
