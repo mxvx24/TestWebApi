@@ -31,6 +31,8 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    using NLog.Extensions.Logging;
+
     using Swashbuckle.AspNetCore.Swagger;
 
     using TestWebApi.Data;
@@ -119,6 +121,12 @@
                 builder =>
                 {
                     builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Trace);
+                    builder.AddNLog(
+                        new NLogProviderOptions
+                            {
+                                CaptureMessageTemplates = true,
+                                CaptureMessageProperties = true
+                            });
                 });
 
             // services.AddSingleton<IHostedService, ProductUpdateHostedService>();
@@ -255,7 +263,7 @@
                                     if (exceptionHandlerFeature != null)
                                     {
                                         ILogger logger = loggerFactory.CreateLogger("Global Exception Logger");
-                                        logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
+                                        logger.LogError(exceptionHandlerFeature.Error.ToString());
                                     }
 
                                     // Response to client

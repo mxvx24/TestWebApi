@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
 
     using TestWebAPI.DTOs;
     using TestWebAPI.Library.ActionFilters;
@@ -17,6 +18,11 @@
     public class ValuesController : ControllerBase
     {
         /// <summary>
+        /// The logger.
+        /// </summary>
+        private readonly ILogger logger;
+
+        /// <summary>
         /// The configuration.
         /// </summary>
         private readonly Configuration configuration;
@@ -27,9 +33,14 @@
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        public ValuesController(Configuration configuration)
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        public ValuesController(Configuration configuration, ILogger<ValuesController> logger)
         {
             this.configuration = configuration;
+            this.logger = logger;
+            this.logger.LogInformation($"{nameof(ValuesController)} class has been instantiated.");
         }
 
         /// <summary>
@@ -68,6 +79,7 @@
         [HttpGet("async")]
         public async Task<ActionResult> GetAsync()
         {
+            this.logger.LogInformation($"{nameof(GetAsync)} method has been invoked.");
             List<string> values = await this.ValueRepo(default);
             return this.Ok(values);
         }
@@ -84,6 +96,7 @@
         [HttpGet("async/{id}")]
         public async Task<ActionResult> GetByIdAsync(int id)
         {
+            this.logger.LogInformation($"{nameof(GetByIdAsync)} method has been invoked with param {nameof(id)}: {id}.");
             List<string> values = await this.ValueRepo(id);
             return this.Ok(values);
         }
@@ -122,6 +135,19 @@
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        /// <summary>
+        /// The exception test.
+        /// </summary>
+        /// <exception cref="Exception">
+        /// The exception.
+        /// </exception>
+        [HttpGet("exception")]
+        public void ExceptionTest()
+        {
+            // Test exception handling
+            throw new Exception("Test: You can safely ignore this exception.");
         }
 
         /// <summary>
